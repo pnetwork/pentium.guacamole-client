@@ -3,6 +3,7 @@
   "version": "1.4.0-a",
   "description": "The Guacamole javascript client",
   "main": "dist/guacamole-common.js",
+  "typings": "./guacamole-common-js/types/index.d.ts",
   "scripts": {
     "build": "gulp",
     "prepublishOnly": "gulp"
@@ -37,7 +38,7 @@
     "gulp": "^4.0.2",
     "gulp-concat": "^2.6.1",
     "gulp-insert": "^0.5.0",
-    "gulp-uglify": "^3.0.2",
-    "gulp-rename": "^2.0.0"
+    "gulp-rename": "^2.0.0",
+    "gulp-uglify": "^3.0.2"
   }
 }

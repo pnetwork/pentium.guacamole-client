@@ -87,7 +87,7 @@ export class SessionRecording {
    * @param {string} [data]
    *     The data to send to the tunnel when connecting.
    */
-  connect: (data: string) => void;
+  connect: (data?: string) => void;
 
   /**
    * Disconnects the underlying tunnel, stopping further download of the

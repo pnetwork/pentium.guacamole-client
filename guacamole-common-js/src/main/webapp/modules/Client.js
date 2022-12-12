@@ -1674,6 +1674,15 @@ Guacamole.Client = function(tunnel) {
             else
                 guac_client.sendAck(stream_index, "BAD TYPE", 0x030F);
 
+        },
+
+        snapshot: function(parameters) {
+            
+            const [snapshot] = parameters
+            const decodeSnapshot = window.atob(snapshot)
+            const deserializedSnapshot = JSON.parse(decodeSnapshot)
+            guac_client.importState(deserializedSnapshot)
+
         }
 
     };

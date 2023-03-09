@@ -879,6 +879,16 @@ Guacamole.Client = function(tunnel) {
     this.onsync = null;
 
     /**
+     *  Fired when the "connect-time" instruction is received, indicating remote-session
+     *  connection time, its purpose is to synchronize the connection time between the 
+     *  remote connection and monitor, this instruction has no effect on Client instances.
+     *  @event
+     *  @param {!number} timestamp
+     *      The timestamp is the remote session create time.
+     */
+    this.onConnectTime = null
+
+    /**
      * Returns the layer with the given index, creating it if necessary.
      * Positive indices refer to visible layers, an index of zero refers to
      * the default layer, and negative indices refer to buffers.
@@ -1676,14 +1686,11 @@ Guacamole.Client = function(tunnel) {
 
         },
 
-        snapshot: function(parameters) {
-            
-            const [snapshot] = parameters
-            const decodeSnapshot = window.atob(snapshot)
-            const deserializedSnapshot = JSON.parse(decodeSnapshot)
-            guac_client.importState(deserializedSnapshot)
-
-        }
+        "connect-time": function(parameters) {
+            if (this.onConnectTime) {
+               this.onConnectTime(parseInt(parameters[0]));
+            }
+        },
 
     };
 

@@ -1687,8 +1687,8 @@ Guacamole.Client = function(tunnel) {
         },
 
         "connect-time": function(parameters) {
-            if (this.onConnectTime) {
-               this.onConnectTime(parseInt(parameters[0]));
+            if (guac_client.onConnectTime) {
+                guac_client.onConnectTime(parseInt(parameters[0]));
             }
         },
 

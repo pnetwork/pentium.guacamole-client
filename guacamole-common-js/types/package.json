@@ -1,39 +1,39 @@
 {
-    "name": "@types/pentium.guacamole-common-js",
-    "version": "1.4.0.a",
-    "description": "TypeScript definitions for guacamole-common-js",
-    "license": "MIT",
-    "contributors": [
-        {
-            "name": "Konstantin Simeonov",
-            "url": "https://github.com/KonstantinSimeonov",
-            "githubUsername": "KonstantinSimeonov"
-        },
-        {
-            "name": "Alex Vakrilov",
-            "url": "https://github.com/vakrilov",
-            "githubUsername": "vakrilov"
-        },
-        {
-            "name": "Petar Metodiev",
-            "url": "https://github.com/PetarMetodiev",
-            "githubUsername": "PetarMetodiev"
-        },
-        {
-            "name": "Jon Sun",
-            "url": "https://github.com/Talent30",
-            "githubUsername": "Talent30"
-        },
-        {
-            "name": "Linh Nguyen",
-            "url": "https://github.com/linn-gith",
-            "githubUsername": "linn-gith"
-        }
-    ],
-    "main": "",
-    "types": "index.d.ts",
-    "scripts": {},
-    "dependencies": {},
-    "typesPublisherContentHash": "b201ebe44b0a622b6d69042999117118f981598ef758a9c166eff684a5b2f1e7",
-    "typeScriptVersion": "4.1"
+  "name": "@types/pentium.guacamole-common-js",
+  "version": "1.4.3",
+  "description": "TypeScript definitions for guacamole-common-js",
+  "license": "MIT",
+  "contributors": [
+    {
+      "name": "Konstantin Simeonov",
+      "url": "https://github.com/KonstantinSimeonov",
+      "githubUsername": "KonstantinSimeonov"
+    },
+    {
+      "name": "Alex Vakrilov",
+      "url": "https://github.com/vakrilov",
+      "githubUsername": "vakrilov"
+    },
+    {
+      "name": "Petar Metodiev",
+      "url": "https://github.com/PetarMetodiev",
+      "githubUsername": "PetarMetodiev"
+    },
+    {
+      "name": "Jon Sun",
+      "url": "https://github.com/Talent30",
+      "githubUsername": "Talent30"
+    },
+    {
+      "name": "Linh Nguyen",
+      "url": "https://github.com/linn-gith",
+      "githubUsername": "linn-gith"
+    }
+  ],
+  "main": "",
+  "types": "index.d.ts",
+  "scripts": {},
+  "dependencies": {},
+  "typesPublisherContentHash": "b201ebe44b0a622b6d69042999117118f981598ef758a9c166eff684a5b2f1e7",
+  "typeScriptVersion": "4.1"
 }

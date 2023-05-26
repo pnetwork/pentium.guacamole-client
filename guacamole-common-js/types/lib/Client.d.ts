@@ -361,5 +361,14 @@ export class Client {
      * @event
      * @param timestamp The timestamp associated with the sync instruction.
      */
-    onsync: null | ((timestramp: number) => void);
+    onsync: null | ((timestamp: number) => void);
+     /**
+     *  Fired when the "connect-time" instruction is received, indicating remote-session
+     *  connection time, its purpose is to synchronize the connection time between the 
+     *  remote connection and monitor, this instruction has no effect on Client instances.
+     *  @event
+     *  @param {!number} timestamp
+     *      The timestamp is the remote session create time.
+     */
+    onConnectTime : null | ((timestamp: number) => void);
 }

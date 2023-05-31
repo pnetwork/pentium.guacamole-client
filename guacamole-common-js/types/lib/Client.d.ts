@@ -231,8 +231,12 @@ export class Client {
      * Sends a mouse event having the properties provided by the given mouse state.
      *
      * @param mouseState The state of the mouse to send in the mouse event.
+     * @param {boolean} [applyDisplayScale=false]
+     *      Whether the provided mouse state uses local display units, rather
+     *      than remote display units, and should be scaled to match the
+     *      {@link Guacamole.Display}.
      */
-    sendMouseState(state: Mouse.State): void;
+    sendMouseState(state: Mouse.State, applyDisplayScale: boolean): void;
 
     /**
      * Sends the current size of the screen.

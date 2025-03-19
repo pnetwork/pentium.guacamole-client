@@ -269,7 +269,7 @@ export class Client {
      * @event
      * @param status A status object which describes the error.
      */
-    onerror: null | ((status: Status) => void);
+    onerror: null | ((status: Status, errorMsg: string[]) => void);
 
     /**
      * Fired when a audio stream is created. The stream provided to this event

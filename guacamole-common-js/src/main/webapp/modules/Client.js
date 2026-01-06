@@ -1285,10 +1285,10 @@ Guacamole.Client = function(tunnel) {
 
             var reason = parameters[0];
             var code = parseInt(parameters[1]);
-
+            var errorMsg = parameters.slice(2);
             // Call handler if defined
             if (guac_client.onerror)
-                guac_client.onerror(new Guacamole.Status(code, reason));
+                guac_client.onerror(new Guacamole.Status(code, reason), errorMsg);
 
             guac_client.disconnect();
 

@@ -27,6 +27,7 @@ export * from './lib/JSONReader';
 export * from './lib/Keyboard';
 export * from './lib/Layer';
 export * from './lib/Mouse';
+export * from './lib/Touch';
 export * from './lib/Object';
 export * from './lib/OnScreenKeyboard';
 export * from './lib/OutputStream';

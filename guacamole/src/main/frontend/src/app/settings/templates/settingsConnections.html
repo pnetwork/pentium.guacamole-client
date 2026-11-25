@@ -17,6 +17,10 @@
                ng-show="canCreateConnectionGroups()"
                href="#/manage/{{dataSource | escape}}/connectionGroups/">{{'SETTINGS_CONNECTIONS.ACTION_NEW_CONNECTION_GROUP' | translate}}</a>
 
+            <a class="import-connections button"
+                ng-show="canAdminister()"
+                href="#/import/{{dataSource | escape}}/connection/">{{'SETTINGS_CONNECTIONS.ACTION_IMPORT' | translate}}</a>
+
         </div>
 
         <!-- Connection filter -->

@@ -1,8 +1,19 @@
 import { Display } from "./Display";
 import { Tunnel } from "./Tunnel";
+import { KeyEventInterpreter } from "./KeyEventInterpreter";
 
 export class SessionRecording {
-  constructor(source: Tunnel | Blob);
+  /**
+   * @param source The Blob or Tunnel from which the instructions of the
+   * recording should be read.
+   * @param refreshInterval
+   * The minimum number of milliseconds between updates to the recording
+   * position through the provided onseek() callback. If non-positive, this
+   * parameter will be ignored, and the recording position will only be
+   * updated when seek requests are made, or when new frames are rendered.
+   * If not specified, refreshInterval will default to 1000 milliseconds.
+   */
+  constructor(source: Tunnel | Blob, refreshInterval?: number);
 
   /**
    * Fired when loading of this recording has completed and all frames
@@ -77,6 +88,16 @@ export class SessionRecording {
    *     due to a call to seek(), this will be 1.
    */
   onseek: ((position: number, current: number, total: number) => void) | null;
+
+  /**
+   * Fired with all extracted key events when the recording is fully
+   * processed. The callback will be invoked with an empty list if no key
+   * events were extracted.
+   *
+   * @event
+   * @param batch The extracted key events.
+   */
+  onkeyevents: ((batch: KeyEventInterpreter.KeyEvent[]) => void) | null;
 
   /**
    * Connects the underlying tunnel, beginning download of the Guacamole

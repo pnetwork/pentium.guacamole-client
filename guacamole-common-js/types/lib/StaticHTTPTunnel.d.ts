@@ -14,4 +14,10 @@ export class StaticHTTPTunnel extends Tunnel {
      * headers to be sent in tunnel requests. By default, no extra headers will be added.
      */
     constructor(url: string, crossDomain?: boolean, extraTunnelHeaders?: Record<string, string>);
+
+    /**
+     * The number of bytes in the file being downloaded, or null if this is not
+     * known.
+     */
+    size: number | null;
 }

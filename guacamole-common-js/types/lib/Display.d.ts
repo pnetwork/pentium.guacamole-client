@@ -7,6 +7,56 @@ export { };
 export namespace Display {
     export {};
     export type VisibleLayer = typeof VisibleLayer;
+
+    /**
+     * A set of Guacamole display performance statistics, describing the speed
+     * at which the remote desktop, Guacamole server, and Guacamole client are
+     * rendering frames.
+     */
+    export class Statistics {
+        constructor(template?: Partial<Statistics>);
+
+        /**
+         * The amount of time that the Guacamole client is taking to render
+         * individual frames, in milliseconds, if known. If this value is unknown,
+         * such as if the there are insufficient frame statistics recorded to
+         * calculate this value, this will be null.
+         */
+        processingLag: number | null;
+
+        /**
+         * The framerate of the remote desktop currently being viewed within the
+         * relevant Guacamole.Display, independent of Guacamole, in frames per
+         * second. This represents the speed at which the remote desktop is
+         * generating frame data for the Guacamole server to consume. If this
+         * value is unknown, such as if the remote desktop server does not
+         * actually define frame boundaries, this will be null.
+         */
+        desktopFps: number | null;
+
+        /**
+         * The rate at which the Guacamole server is generating frames for the
+         * Guacamole client to consume, in frames per second. If Guacamole
+         * is not currently limiting the framerate, this value will be the same
+         * as desktopFps. If unknown, this will be null.
+         */
+        serverFps: number | null;
+
+        /**
+         * The rate at which the Guacamole client is consuming frames generated
+         * by the Guacamole server, in frames per second. If the Guacamole client
+         * is not under heavy load, this value will be the same as serverFps.
+         */
+        clientFps: number;
+
+        /**
+         * The rate at which the Guacamole server is dropping or combining
+         * frames received from the remote desktop server to reduce load, in
+         * frames per second. If the server is not currently dropping or combining
+         * frames, this will be zero. If unknown, this will be null.
+         */
+        dropRate: number | null;
+    }
 }
 
 /**
@@ -343,8 +393,43 @@ export class Display {
      * @param callback The function to call when this frame is
      * flushed. This may happen immediately, or
      * later when blocked tasks become unblocked.
+     * @param timestamp
+     * The remote timestamp of sync instruction associated with this frame.
+     * This timestamp is in milliseconds, but is arbitrary, having meaning
+     * only relative to other remote timestamps in the same connection. If
+     * omitted, a compatible but local timestamp will be used instead.
+     * @param logicalFrames
+     * The number of remote desktop frames that were combined to produce this
+     * frame, or zero if this value is unknown or inapplicable.
      */
-    flush(callback: () => void): void;
+    flush(callback: () => void, timestamp?: number, logicalFrames?: number): void;
+
+    /**
+     * Cancels rendering of all pending frames and associated rendering
+     * operations. The callbacks provided to outstanding past calls to flush(),
+     * if any, are not invoked.
+     */
+    cancel(): void;
+
+    /**
+     * The number of milliseconds over which display rendering statistics
+     * should be gathered, dispatching onstatistics events as those
+     * statistics are available. If set to zero, no statistics will be
+     * gathered. The default value is 0.
+     */
+    statisticWindow: number;
+
+    /**
+     * Fired whenever performance statistics are available for recently-
+     * rendered frames. This event will fire only if statisticWindow is
+     * non-zero.
+     *
+     * @event
+     * @param stats
+     * An object containing general rendering performance statistics for the
+     * remote desktop, Guacamole server, and Guacamole client.
+     */
+    onstatistics: null | ((stats: Display.Statistics) => void);
 
     /**
      * Sets the hotspot and image of the mouse cursor displayed within the

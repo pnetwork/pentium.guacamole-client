@@ -17,6 +17,8 @@
  * under the License.
  */
 
+/* global Guacamole, _ */
+
 /**
  * Provides the ManagedClient class used by the guacClientManager service.
  */
@@ -173,6 +175,25 @@ angular.module('client').factory('ManagedClient', ['$rootScope', '$injector',
          * @type ManagedFilesystem[]
          */
         this.filesystems = template.filesystems || [];
+
+        /**
+         * The current number of users sharing this connection, excluding the
+         * user that originally started the connection. Duplicate connections
+         * from the same user are included in this total.
+         */
+        this.userCount = template.userCount || 0;
+
+        /**
+         * All users currently sharing this connection, excluding the user that
+         * originally started the connection. If the connection is not shared,
+         * this object will be empty. This map consists of key/value pairs
+         * where each key is the user's username and each value is an object
+         * tracking the unique connections currently used by that user (a map
+         * of Guacamole protocol user IDs to boolean values).
+         *
+         * @type Object.<string, Object.<string, boolean>>
+         */
+        this.users = template.users || {};
 
         /**
          * All available share links generated for the this ManagedClient via
@@ -427,25 +448,25 @@ angular.module('client').factory('ManagedClient', ['$rootScope', '$injector',
                 switch (clientState) {
 
                     // Idle
-                    case 0:
+                    case Guacamole.Client.State.IDLE:
                         ManagedClientState.setConnectionState(managedClient.clientState,
                             ManagedClientState.ConnectionState.IDLE);
                         break;
 
                     // Connecting
-                    case 1:
+                    case Guacamole.Client.State.CONNECTING:
                         ManagedClientState.setConnectionState(managedClient.clientState,
                             ManagedClientState.ConnectionState.CONNECTING);
                         break;
 
                     // Connected + waiting
-                    case 2:
+                    case Guacamole.Client.State.WAITING:
                         ManagedClientState.setConnectionState(managedClient.clientState,
                             ManagedClientState.ConnectionState.WAITING);
                         break;
 
                     // Connected
-                    case 3:
+                    case Guacamole.Client.State.CONNECTED:
                         ManagedClientState.setConnectionState(managedClient.clientState,
                             ManagedClientState.ConnectionState.CONNECTED);
 
@@ -461,9 +482,9 @@ angular.module('client').factory('ManagedClient', ['$rootScope', '$injector',
                         ManagedClient.updateThumbnail(managedClient);
                         break;
 
-                    // Update history when disconnecting
-                    case 4: // Disconnecting
-                    case 5: // Disconnected
+                    // Update history during disconnect phases
+                    case Guacamole.Client.State.DISCONNECTING:
+                    case Guacamole.Client.State.DISCONNECTED:
                         ManagedClient.updateThumbnail(managedClient);
                         break;
 
@@ -483,6 +504,36 @@ angular.module('client').factory('ManagedClient', ['$rootScope', '$injector',
                 ManagedClientState.setConnectionState(managedClient.clientState,
                     ManagedClientState.ConnectionState.CLIENT_ERROR,
                     status.code);
+
+            });
+        };
+
+        // Update user count when a new user joins
+        client.onjoin = function userJoined(id, username) {
+            $rootScope.$apply(function usersChanged() {
+
+                var connections = managedClient.users[username] || {};
+                managedClient.users[username] = connections;
+
+                managedClient.userCount++;
+                connections[id] = true;
+
+            });
+        };
+
+        // Update user count when a user leaves
+        client.onleave = function userLeft(id, username) {
+            $rootScope.$apply(function usersChanged() {
+
+                var connections = managedClient.users[username] || {};
+                managedClient.users[username] = connections;
+
+                managedClient.userCount--;
+                delete connections[id];
+
+                // Delete user entry after no connections remain
+                if (_.isEmpty(connections))
+                    delete managedClient.users[username];
 
             });
         };
@@ -785,8 +836,7 @@ angular.module('client').factory('ManagedClient', ['$rootScope', '$injector',
      */
     ManagedClient.setArgument = function setArgument(managedClient, name, value) {
         var managedArgument = managedClient.arguments[name];
-        if (managedArgument && ManagedArgument.setValue(managedArgument, value))
-            delete managedClient.arguments[name];
+        managedArgument && ManagedArgument.setValue(managedArgument, value);
     };
 
     /**
@@ -892,11 +942,14 @@ angular.module('client').factory('ManagedClient', ['$rootScope', '$injector',
         return false;
 
     };
-
+    
     /**
      * Returns whether the given client has any associated file transfers,
      * regardless of those file transfers' state.
      *
+     * @param {GuacamoleClient} client
+     *     The client for which file transfers should be checked.
+     * 
      * @returns {boolean}
      *     true if there are any file transfers associated with the
      *     given client, false otherwise.

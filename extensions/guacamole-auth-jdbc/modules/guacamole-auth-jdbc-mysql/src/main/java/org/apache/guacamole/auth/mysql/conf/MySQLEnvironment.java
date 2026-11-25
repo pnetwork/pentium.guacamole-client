@@ -80,7 +80,7 @@ public class MySQLEnvironment extends JDBCEnvironment {
      * The default value for the default maximum number of connections to be
      * allowed per user to any one connection.
      */
-    private final int DEFAULT_MAX_CONNECTIONS_PER_USER = 1;
+    private final int DEFAULT_MAX_CONNECTIONS_PER_USER = 0;
 
     /**
      * The default value for the default maximum number of connections to be
@@ -104,6 +104,20 @@ public class MySQLEnvironment extends JDBCEnvironment {
      * The default SSL mode for connecting to MySQL servers.
      */
     private final MySQLSSLMode DEFAULT_SSL_MODE = MySQLSSLMode.PREFERRED;
+    
+    /**
+     * The default maximum number of identifiers/parameters to be included in a 
+     * single batch when executing SQL statements for MySQL and MariaDB.
+     * 
+     * MySQL and MariaDB impose a limit on the maximum size of a query, 
+     * determined by the max_allowed_packet configuration variable. A value of 
+     * 1000 is chosen to accommodate the max_allowed_packet limit without 
+     * exceeding it.
+     *
+     * @see https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html#sysvar_max_allowed_packet
+     * @see https://mariadb.com/kb/en/server-system-variables/#max_allowed_packet
+     */
+    private static final int DEFAULT_BATCH_SIZE = 1000;
 
     /**
      * Constructs a new MySQLEnvironment, providing access to MySQL-specific
@@ -132,6 +146,13 @@ public class MySQLEnvironment extends JDBCEnvironment {
     public int getAbsoluteMaxConnections() throws GuacamoleException {
         return getProperty(MySQLGuacamoleProperties.MYSQL_ABSOLUTE_MAX_CONNECTIONS,
             DEFAULT_ABSOLUTE_MAX_CONNECTIONS
+        );
+    }
+    
+    @Override
+    public int getBatchSize() throws GuacamoleException {
+        return getProperty(MySQLGuacamoleProperties.MYSQL_BATCH_SIZE,
+            DEFAULT_BATCH_SIZE
         );
     }
 
@@ -410,6 +431,16 @@ public class MySQLEnvironment extends JDBCEnvironment {
         // Track external connection history unless explicitly disabled
         return getProperty(MySQLGuacamoleProperties.MYSQL_TRACK_EXTERNAL_CONNECTION_HISTORY,
                 true);
+    }
+
+    @Override
+    public boolean enforceAccessWindowsForActiveSessions() throws GuacamoleException {
+
+        // Enforce access window restrictions for active sessions unless explicitly disabled
+        return getProperty(
+                MySQLGuacamoleProperties.MYSQL_ENFORCE_ACCESS_WINDOWS_FOR_ACTIVE_SESSIONS,
+                true
+        );
     }
 
 }

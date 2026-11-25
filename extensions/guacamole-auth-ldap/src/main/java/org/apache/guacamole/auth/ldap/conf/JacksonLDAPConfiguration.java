@@ -22,6 +22,7 @@ package org.apache.guacamole.auth.ldap.conf;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import static com.fasterxml.jackson.annotation.JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -116,6 +117,14 @@ public class JacksonLDAPConfiguration implements LDAPConfiguration {
      */
     @JsonProperty("encryption-method")
     private String encryptionMethod;
+    
+    /**
+     * The raw YAML value of {@link LDAPGuacamoleProperties#LDAP_SSL_PROTOCOL}. If
+     * not set within the YAML, this will be null, and will default to the value
+     * specified by the LDAP API library.
+     */
+    @JsonProperty("ssl-protocol")
+    private String sslProtocol;
 
     /**
      * The raw YAML value of {@link LDAPGuacamoleProperties#LDAP_MAX_SEARCH_RESULTS}.
@@ -323,7 +332,7 @@ public class JacksonLDAPConfiguration implements LDAPConfiguration {
     }
 
     @Override
-    public List<String> getUsernameAttributes() throws GuacamoleException {
+    public Collection<String> getUsernameAttributes() throws GuacamoleException {
         return withDefault(usernameAttributes, defaultConfig::getUsernameAttributes);
     }
 
@@ -340,7 +349,7 @@ public class JacksonLDAPConfiguration implements LDAPConfiguration {
     }
 
     @Override
-    public List<String> getGroupNameAttributes() throws GuacamoleException {
+    public Collection<String> getGroupNameAttributes() throws GuacamoleException {
         return withDefault(groupNameAttributes, defaultConfig::getGroupNameAttributes);
     }
 
@@ -364,6 +373,12 @@ public class JacksonLDAPConfiguration implements LDAPConfiguration {
     public EncryptionMethod getEncryptionMethod() throws GuacamoleException {
         return withDefault(LDAPGuacamoleProperties.LDAP_ENCRYPTION_METHOD,
                 encryptionMethod, defaultConfig::getEncryptionMethod);
+    }
+    
+    @Override
+    public LDAPSSLProtocol getSslProtocol() throws GuacamoleException {
+        return withDefault(LDAPGuacamoleProperties.LDAP_SSL_PROTOCOL,
+                sslProtocol, defaultConfig::getSslProtocol);
     }
 
     @Override
@@ -410,7 +425,7 @@ public class JacksonLDAPConfiguration implements LDAPConfiguration {
     }
 
     @Override
-    public List<String> getAttributes() throws GuacamoleException {
+    public Collection<String> getAttributes() throws GuacamoleException {
         return withDefault(userAttributes, defaultConfig::getAttributes);
     }
     

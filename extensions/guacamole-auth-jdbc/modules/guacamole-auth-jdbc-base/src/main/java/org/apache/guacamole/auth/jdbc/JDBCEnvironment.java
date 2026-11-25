@@ -68,6 +68,19 @@ public abstract class JDBCEnvironment extends DelegatingEnvironment {
     public abstract int getAbsoluteMaxConnections() throws GuacamoleException;
 
     /**
+     * Returns the maximum number of identifiers/parameters to be 
+     * included in a single batch when executing SQL statements.
+     *
+     * @return
+     *     The maximum number of identifiers/parameters to be included 
+     *     in a single batch.
+     *
+     * @throws GuacamoleException
+     *     If an error occurs while retrieving the property.
+     */
+    public abstract int getBatchSize() throws GuacamoleException;
+
+    /**
      * Returns the default maximum number of concurrent connections to allow to
      * any one connection, unless specified differently on an individual
      * connection. Zero denotes unlimited.
@@ -226,5 +239,37 @@ public abstract class JDBCEnvironment extends DelegatingEnvironment {
      *     If guacamole.properties cannot be parsed.
      */
     public abstract boolean trackExternalConnectionHistory() throws GuacamoleException;
+
+    /**
+     * Returns a boolean value representing whether access time windows should
+     * be enforced for active connections - i.e. whether a currently-connected
+     * user should be disconnected upon the closure of an access window.
+     *
+     * @return
+     *     true if a connected user should be disconnected upon an access time
+     *     window closing, false otherwise.
+     *
+     * @throws GuacamoleException
+     *     If guacamole.properties cannot be parsed.
+     */
+    public abstract boolean enforceAccessWindowsForActiveSessions() throws GuacamoleException;
+
+    /**
+     * Returns true if the JDBC batch executor should be used by default, false
+     * otherwise. The batch executor allows repeated updates to be batched
+     * together for improved performance. 
+     * See https://mybatis.org/mybatis-3/java-api.html#sqlSessions
+     *
+     * @return
+     *     true if the batch executor should be used by default, false otherwise.
+     */
+    public boolean shouldUseBatchExecutor() {
+
+        // Unless otherwise overwritten due to implementation-specific problems,
+        // all JDBC extensions should use the batch executor if possible to
+        // ensure the best performance for repetitive queries
+        return true;
+
+    }
 
 }

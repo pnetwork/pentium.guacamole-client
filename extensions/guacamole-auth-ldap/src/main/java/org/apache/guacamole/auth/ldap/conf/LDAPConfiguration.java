@@ -19,7 +19,7 @@
 
 package org.apache.guacamole.auth.ldap.conf;
 
-import java.util.List;
+import java.util.Collection;
 import org.apache.directory.api.ldap.model.filter.ExprNode;
 import org.apache.directory.api.ldap.model.message.AliasDerefMode;
 import org.apache.directory.api.ldap.model.name.Dn;
@@ -84,7 +84,7 @@ public interface LDAPConfiguration {
      * @throws GuacamoleException
      *     If the username attributes cannot be retrieved.
      */
-    List<String> getUsernameAttributes() throws GuacamoleException;
+    Collection<String> getUsernameAttributes() throws GuacamoleException;
 
     /**
      * Returns the base DN under which all Guacamole users will be stored
@@ -125,7 +125,7 @@ public interface LDAPConfiguration {
      * @throws GuacamoleException
      *     If the group name attributes cannot be retrieved.
      */
-    List<String> getGroupNameAttributes() throws GuacamoleException;
+    Collection<String> getGroupNameAttributes() throws GuacamoleException;
 
     /**
      * Returns the base DN under which all Guacamole role based access control
@@ -183,6 +183,20 @@ public interface LDAPConfiguration {
      *     If the encryption method cannot be retrieved.
      */
     EncryptionMethod getEncryptionMethod() throws GuacamoleException;
+    
+    /**
+     * Returns the SSL protocol that should be used when making a secure
+     * connection to the LDAP server. By default the latest available TLS
+     * version will be used.
+     * 
+     * @return
+     *     The SSL protocol that should be used when making a secure connection
+     *     to the LDAP server.
+     * 
+     * @throws GuacamoleException 
+     *     If the SSL protocol cannot be retrieved.
+     */
+    LDAPSSLProtocol getSslProtocol() throws GuacamoleException;
 
     /**
      * Returns maximum number of results a LDAP query can return.
@@ -291,7 +305,7 @@ public interface LDAPConfiguration {
      *     If the names of the LDAP user attributes to be exposed as parameter
      *     tokens cannot be retrieved.
      */
-    List<String> getAttributes() throws GuacamoleException;
+    Collection<String> getAttributes() throws GuacamoleException;
     
     /**
      * Returns the name of the LDAP attribute used to enumerate members in a

@@ -22,8 +22,6 @@ package org.apache.guacamole.auth.postgresql.conf;
 import java.io.File;
 import org.apache.guacamole.GuacamoleException;
 import org.apache.guacamole.auth.jdbc.JDBCEnvironment;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.guacamole.auth.jdbc.security.PasswordPolicy;
 import org.apache.ibatis.session.SqlSession;
 
@@ -32,11 +30,6 @@ import org.apache.ibatis.session.SqlSession;
  * properties specifically for PostgreSQL.
  */
 public class PostgreSQLEnvironment extends JDBCEnvironment {
-
-    /**
-     * Logger for this class.
-     */
-    private static final Logger logger = LoggerFactory.getLogger(PostgreSQLEnvironment.class);
 
     /**
      * The default host to connect to, if POSTGRESQL_HOSTNAME is not specified.
@@ -81,7 +74,7 @@ public class PostgreSQLEnvironment extends JDBCEnvironment {
      * dictate the values that should be used in the absence of the correct
      * properties.
      */
-    private final int DEFAULT_MAX_CONNECTIONS_PER_USER = 1;
+    private final int DEFAULT_MAX_CONNECTIONS_PER_USER = 0;
 
     /**
      * The default value for the default maximum number of connections to be
@@ -115,6 +108,18 @@ public class PostgreSQLEnvironment extends JDBCEnvironment {
      * The default value to use for SSL mode if none is explicitly configured.
      */
     private final PostgreSQLSSLMode DEFAULT_SSL_MODE = PostgreSQLSSLMode.PREFER;
+    
+    /**
+     * The default maximum number of identifiers/parameters to be included in a 
+     * single batch when executing SQL statements for PostgreSQL.
+     * 
+     * PostgreSQL has a maximum limit of 65535 parameters per prepared statement.
+     * A value of 5000 is chosen to avoid potential performance issues or query
+     * execution errors while staying well below the maximum limit.
+     *
+     * @see https://www.postgresql.org/docs/current/runtime-config-resource.html#GUC-MAX-PREPARED-STATEMENT-ARGS
+     */
+    private static final int DEFAULT_BATCH_SIZE = 5000;
 
     /**
      * Constructs a new PostgreSQLEnvironment, providing access to PostgreSQL-specific
@@ -146,6 +151,13 @@ public class PostgreSQLEnvironment extends JDBCEnvironment {
         );
     }
 
+    @Override
+    public int getBatchSize() throws GuacamoleException {
+        return getProperty(PostgreSQLGuacamoleProperties.POSTGRESQL_BATCH_SIZE,
+            DEFAULT_BATCH_SIZE
+        );
+    }    
+    
     @Override
     public int getDefaultMaxConnections() throws GuacamoleException {
         return getProperty(
@@ -368,6 +380,15 @@ public class PostgreSQLEnvironment extends JDBCEnvironment {
 
         // Track external connection history unless explicitly disabled
         return getProperty(PostgreSQLGuacamoleProperties.POSTGRESQL_TRACK_EXTERNAL_CONNECTION_HISTORY,
+                true);
+    }
+
+    @Override
+    public boolean enforceAccessWindowsForActiveSessions() throws GuacamoleException {
+
+        // Enforce access window restrictions for active sessions unless explicitly disabled
+        return getProperty(
+                PostgreSQLGuacamoleProperties.POSTGRESQL_ENFORCE_ACCESS_WINDOWS_FOR_ACTIVE_SESSIONS,
                 true);
     }
 

@@ -290,4 +290,41 @@ public class PostgreSQLGuacamoleProperties {
 
     };
 
+    /**
+     * Whether or not user-specific access time windows should be enforced for active sessions,
+     * i.e. whether users with active sessions should be logged out immediately when an access
+     * window closes.
+     */
+    public static final BooleanGuacamoleProperty POSTGRESQL_ENFORCE_ACCESS_WINDOWS_FOR_ACTIVE_SESSIONS =
+            new BooleanGuacamoleProperty() {
+
+        @Override
+        public String getName() { return "postgresql-enforce-access-windows-for-active-sessions"; }
+
+    };
+    
+    /**
+     * The maximum number of identifiers/parameters to be included in a single batch when
+     * executing SQL statements.
+     */
+    public static final IntegerGuacamoleProperty POSTGRESQL_BATCH_SIZE =
+            new IntegerGuacamoleProperty() {
+
+        @Override
+        public String getName() { return "postgresql-batch-size"; }
+
+    };
+    
+    /**
+     * A property used to configure whether or not usernames within the Postgres
+     * JDBC module should be treated as case-sensitive.
+     */
+    public static final BooleanGuacamoleProperty POSTGRESQL_CASE_SENSITIVE_USERNAMES =
+            new BooleanGuacamoleProperty() {
+                
+        @Override
+        public String getName() { return "postgresql-case-sensitive-usernames"; }
+        
+    };
+
 }

@@ -19,6 +19,7 @@
 
 package org.apache.guacamole.auth.ldap;
 
+import java.util.Collection;
 import java.util.List;
 import org.apache.directory.api.ldap.model.filter.ExprNode;
 import org.apache.directory.api.ldap.model.message.AliasDerefMode;
@@ -27,6 +28,7 @@ import org.apache.directory.ldap.client.api.LdapNetworkConnection;
 import org.apache.guacamole.GuacamoleException;
 import org.apache.guacamole.auth.ldap.conf.EncryptionMethod;
 import org.apache.guacamole.auth.ldap.conf.LDAPConfiguration;
+import org.apache.guacamole.auth.ldap.conf.LDAPSSLProtocol;
 import org.apache.guacamole.auth.ldap.conf.MemberAttributeType;
 
 /**
@@ -123,7 +125,7 @@ public class ConnectedLDAPConfiguration implements LDAPConfiguration, AutoClosea
     }
 
     @Override
-    public List<String> getUsernameAttributes() throws GuacamoleException {
+    public Collection<String> getUsernameAttributes() throws GuacamoleException {
         return config.getUsernameAttributes();
     }
 
@@ -138,7 +140,7 @@ public class ConnectedLDAPConfiguration implements LDAPConfiguration, AutoClosea
     }
 
     @Override
-    public List<String> getGroupNameAttributes() throws GuacamoleException {
+    public Collection<String> getGroupNameAttributes() throws GuacamoleException {
         return config.getGroupNameAttributes();
     }
 
@@ -160,6 +162,11 @@ public class ConnectedLDAPConfiguration implements LDAPConfiguration, AutoClosea
     @Override
     public EncryptionMethod getEncryptionMethod() throws GuacamoleException {
         return config.getEncryptionMethod();
+    }
+    
+    @Override
+    public LDAPSSLProtocol getSslProtocol() throws GuacamoleException {
+        return config.getSslProtocol();
     }
 
     @Override
@@ -203,7 +210,7 @@ public class ConnectedLDAPConfiguration implements LDAPConfiguration, AutoClosea
     }
 
     @Override
-    public List<String> getAttributes() throws GuacamoleException {
+    public Collection<String> getAttributes() throws GuacamoleException {
         return config.getAttributes();
     }
 

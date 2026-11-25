@@ -26,7 +26,7 @@
 ##
 ## @param DATABASE
 ##     The database to generate the SQL script for. This may be either
-##     "--postgres", for PostgreSQL, "--mysql" for MySQL, or "--sqlserver" for Microsoft SQL Server.
+##     "--postgresql", for PostgreSQL, "--mysql" for MySQL, or "--sqlserver" for Microsoft SQL Server.
 ##
 
 DATABASE="$1"
@@ -37,7 +37,7 @@ DATABASE="$1"
 ##
 incorrect_usage() {
     cat <<END
-USAGE: /opt/guacamole/bin/initdb.sh [--postgres | --mysql | --sqlserver]
+USAGE: /opt/guacamole/bin/initdb.sh [--postgresql | --mysql | --sqlserver]
 END
     exit 1
 }
@@ -54,16 +54,16 @@ fi
 
 case $DATABASE in
 
-    --postgres)
-        cat /opt/guacamole/postgresql/schema/*.sql
+    --postgresql)
+        cat /opt/guacamole/extensions/guacamole-auth-jdbc/postgresql/schema/*.sql
         ;;
 
     --mysql)
-        cat /opt/guacamole/mysql/schema/*.sql
+        cat /opt/guacamole/extensions/guacamole-auth-jdbc/mysql/schema/*.sql
         ;;
 
     --sqlserver)
-        cat /opt/guacamole/sqlserver/schema/*.sql
+        cat /opt/guacamole/extensions/guacamole-auth-jdbc/sqlserver/schema/*.sql
         ;;
 
     *)

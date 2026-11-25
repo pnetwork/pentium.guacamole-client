@@ -30,6 +30,7 @@ angular.module('clipboard').directive('guacClipboard', ['$injector',
     const ClipboardData = $injector.get('ClipboardData');
 
     // Required services
+    const $window          = $injector.get('$window');
     const clipboardService = $injector.get('clipboardService');
 
     /**
@@ -49,11 +50,33 @@ angular.module('clipboard').directive('guacClipboard', ['$injector',
 
         /**
          * The DOM element which will contain the clipboard contents within the
-         * user interface provided by this directive.
+         * user interface provided by this directive. We populate the clipboard
+         * editor via this DOM element rather than updating a model so that we
+         * are prepared for future support of rich text contents.
          *
-         * @type Element
+         * @type {!Element}
          */
-        var element = $element[0];
+        var element = $element[0].querySelectorAll('.clipboard')[0];
+
+        /**
+         * Whether clipboard contents should be displayed in the clipboard
+         * editor. If false, clipboard contents will not be displayed until
+         * the user manually reveals them.
+         *
+         * @type {!boolean}
+         */
+        $scope.contentsShown = false;
+
+        /**
+         * Reveals the contents of the clipboard editor, automatically
+         * assigning input focus to the editor if possible.
+         */
+        $scope.showContents = function showContents() {
+            $scope.contentsShown = true;
+            $window.setTimeout(function setFocus() {
+                element.focus();
+            }, 0);
+        };
 
         /**
          * Rereads the contents of the clipboard field, updating the

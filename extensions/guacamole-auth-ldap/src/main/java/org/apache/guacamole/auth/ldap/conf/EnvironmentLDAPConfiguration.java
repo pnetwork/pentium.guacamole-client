@@ -19,7 +19,7 @@
 
 package org.apache.guacamole.auth.ldap.conf;
 
-import java.util.List;
+import java.util.Collection;
 import org.apache.directory.api.ldap.model.filter.ExprNode;
 import org.apache.directory.api.ldap.model.message.AliasDerefMode;
 import org.apache.directory.api.ldap.model.name.Dn;
@@ -75,8 +75,8 @@ public class EnvironmentLDAPConfiguration implements LDAPConfiguration {
     }
 
     @Override
-    public List<String> getUsernameAttributes() throws GuacamoleException {
-        return environment.getProperty(
+    public Collection<String> getUsernameAttributes() throws GuacamoleException {
+        return environment.getPropertyCollection(
             LDAPGuacamoleProperties.LDAP_USERNAME_ATTRIBUTE,
             DEFAULT.getUsernameAttributes()
         );
@@ -98,8 +98,8 @@ public class EnvironmentLDAPConfiguration implements LDAPConfiguration {
     }
 
     @Override
-    public List<String> getGroupNameAttributes() throws GuacamoleException {
-        return environment.getProperty(
+    public Collection<String> getGroupNameAttributes() throws GuacamoleException {
+        return environment.getPropertyCollection(
             LDAPGuacamoleProperties.LDAP_GROUP_NAME_ATTRIBUTE,
             DEFAULT.getGroupNameAttributes()
         );
@@ -134,6 +134,14 @@ public class EnvironmentLDAPConfiguration implements LDAPConfiguration {
         return environment.getProperty(
             LDAPGuacamoleProperties.LDAP_ENCRYPTION_METHOD,
             DEFAULT.getEncryptionMethod()
+        );
+    }
+    
+    @Override
+    public LDAPSSLProtocol getSslProtocol() throws GuacamoleException {
+        return environment.getProperty(
+            LDAPGuacamoleProperties.LDAP_SSL_PROTOCOL,
+            DEFAULT.getSslProtocol()
         );
     }
 
@@ -202,8 +210,8 @@ public class EnvironmentLDAPConfiguration implements LDAPConfiguration {
     }
 
     @Override
-    public List<String> getAttributes() throws GuacamoleException {
-        return environment.getProperty(
+    public Collection<String> getAttributes() throws GuacamoleException {
+        return environment.getPropertyCollection(
             LDAPGuacamoleProperties.LDAP_USER_ATTRIBUTES,
             DEFAULT.getAttributes()
         );
